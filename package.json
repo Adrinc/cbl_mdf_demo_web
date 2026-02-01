@@ -1,0 +1,33 @@
+{
+  "name": "cbl-demo-nethive",
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "node --max-old-space-size=8192 ./node_modules/astro/astro.js build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@astrojs/react": "^4.2.1",
+    "@astrojs/tailwind": "^5.1.5",
+    "@fortawesome/fontawesome-svg-core": "^6.7.2",
+    "@fortawesome/free-solid-svg-icons": "^6.6.0",
+    "@fortawesome/react-fontawesome": "^0.2.2",
+    "@nanostores/react": "^0.8.4",
+    "@tanstack/react-table": "^8.21.3",
+    "astro": "^4.16.18",
+    "leaflet": "^1.9.4",
+    "nanostores": "^0.11.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-leaflet": "^4.2.1",
+    "reactflow": "^11.10.4",
+    "recharts": "^3.7.0",
+    "tailwindcss": "^3.3.5",
+    "typescript": "^5.2.2"
+  },
+  "devDependencies": {
+    "tailwindcss-animated": "^1.0.1"
+  }
+}
