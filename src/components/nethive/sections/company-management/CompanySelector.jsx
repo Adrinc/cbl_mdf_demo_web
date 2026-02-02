@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, Suspense } from 'react';
+import React, { useState, useEffect, useRef, Suspense, useMemo } from 'react';
 import { useStore } from '@nanostores/react';
 import { isEnglish } from '../../../../data/variables';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents, useMap } from 'react-leaflet';
@@ -22,6 +22,31 @@ if (isBrowser) {
   });
 }
 
+// Función para crear un ícono circular personalizado con imagen
+const createCircularIcon = (imageUrl, fallbackIcon = '🏢') => {
+  const iconHtml = `
+    <div class="circular-marker-container">
+      <div class="circular-marker-border"></div>
+      <div class="circular-marker">
+        <img 
+          src="${imageUrl}" 
+          alt="Branch" 
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+        />
+        <span class="circular-marker-fallback" style="display: none;">${fallbackIcon}</span>
+      </div>
+    </div>
+  `;
+  
+  return L.divIcon({
+    html: iconHtml,
+    className: 'custom-circular-marker',
+    iconSize: [60, 60],
+    iconAnchor: [30, 30],
+    popupAnchor: [0, -30]
+  });
+};
+
 // Componente de Tooltip personalizado
 const CustomTooltip = ({ branch, show, position }) => {
   if (!show || !branch) return null;
@@ -41,7 +66,7 @@ const CustomTooltip = ({ branch, show, position }) => {
           alt={branch.name}
           onError={(e) => {
             // Si la imagen no existe, usar una imagen placeholder
-            e.target.src = `${import.meta.env.BASE_URL}/logo_nh_b.png`;
+            e.target.src = `${import.meta.env.BASE_URL}/image/companies/e8.png`;
           }}
         />
       </div>
@@ -72,6 +97,11 @@ const MapEventHandler = ({ onMouseMove }) => {
 // Componente CustomMarker que maneja el hover
 const CustomMarker = ({ branch, onHover, onLeave, onClick, mapRef }) => {
   const markerRef = useRef(null);
+  
+  // Crear ícono personalizado con la imagen de la sucursal
+  const customIcon = useMemo(() => {
+    return createCircularIcon(branch.image, '🏢');
+  }, [branch.image]);
 
   useEffect(() => {
     if (markerRef.current && mapRef.current) {
@@ -106,6 +136,7 @@ const CustomMarker = ({ branch, onHover, onLeave, onClick, mapRef }) => {
     <Marker
       ref={markerRef}
       position={branch.position}
+      icon={customIcon}
       eventHandlers={{
         click: () => onClick(branch)
       }}
@@ -117,7 +148,7 @@ const CustomMarker = ({ branch, onHover, onLeave, onClick, mapRef }) => {
               src={branch.image} 
               alt={branch.name}
               onError={(e) => {
-                e.target.src = `${import.meta.env.BASE_URL}/logo_nh_b.png`;
+                e.target.src = `${import.meta.env.BASE_URL}/image/companies/e8.png`;
               }}
             />
           </div>
@@ -139,8 +170,8 @@ const CustomMarker = ({ branch, onHover, onLeave, onClick, mapRef }) => {
 
 // Datos de empresas y sus sucursales (hardcodeado para demo)
 const companiesData = {
-  "TechCorp Solutions": {
-    id: "techcorp",
+  "Zeiss Technology": {
+    id: "zeiss",
     industry: "Tecnología",
     logo: `${import.meta.env.BASE_URL}/image/logos/logo-zeiss.png`,
     branches: [
@@ -169,7 +200,7 @@ const companiesData = {
         city: "Guadalajara", 
         employees: 180,
         address: "Av. López Mateos 789, Providencia, 44630 Guadalajara, Jal.",
-        image: `${import.meta.env.BASE_URL}/image/companies/e4.jpg`
+        image: `${import.meta.env.BASE_URL}/image/companies/e6.jpg`
       },
       { 
         id: 4, 
@@ -182,8 +213,8 @@ const companiesData = {
       }
     ]
   },
-  "Global Manufacturing Inc": {
-    id: "globalmanuf",
+  "Grupo Bimbo": {
+    id: "bimbo",
     industry: "Manufactura",
     logo: `${import.meta.env.BASE_URL}/image/logos/logo-bimbo.png`,
     branches: [
@@ -203,7 +234,7 @@ const companiesData = {
         city: "Mérida", 
         employees: 85,
         address: "Calle 60 Norte 234, Centro Histórico, 97000 Mérida, Yuc.",
-        image: `${import.meta.env.BASE_URL}/image/companies/e8.jpg`
+        image: `${import.meta.env.BASE_URL}/image/companies/e8.png`
       },
       { 
         id: 7, 
@@ -212,7 +243,7 @@ const companiesData = {
         city: "Ciudad Juárez", 
         employees: 160,
         address: "Av. de las Américas 567, Partido Romero, 32030 Cd. Juárez, Chih.",
-        image: `${import.meta.env.BASE_URL}/image/companies/e8.jpg`
+        image: `${import.meta.env.BASE_URL}/image/companies/e1.jpg`
       },
       { 
         id: 8, 
@@ -225,9 +256,9 @@ const companiesData = {
       }
     ]
   },
-  "FinanceHub Networks": {
-    id: "financehub",
-    industry: "Servicios Financieros",
+  "WWF Conservation": {
+    id: "wwf",
+    industry: "Organización Ambiental",
     logo: `${import.meta.env.BASE_URL}/image/logos/logo-wwf.png`,
     branches: [
       { 
@@ -246,7 +277,7 @@ const companiesData = {
         city: "Monterrey", 
         employees: 150,
         address: "Av. San Jerónimo 432, San Jerónimo, 64640 Monterrey, N.L.",
-        image: `${import.meta.env.BASE_URL}/image/companies/e8.jpg`
+        image: `${import.meta.env.BASE_URL}/image/companies/e8.png`
       },
       { 
         id: 11, 
@@ -268,9 +299,9 @@ const companiesData = {
       }
     ]
   },
-  "RetailChain Express": {
-    id: "retailchain",
-    industry: "Retail",
+  "Lorem Corporation": {
+    id: "lorem",
+    industry: "Servicios Empresariales",
     logo: `${import.meta.env.BASE_URL}/image/logos/logo-lorem.jpg`,
     branches: [
       { 
@@ -280,7 +311,7 @@ const companiesData = {
         city: "Toluca", 
         employees: 200,
         address: "Av. Solidaridad las Torres 543, Las Torres, 50140 Toluca, Méx.",
-        image: `${import.meta.env.BASE_URL}/image/companies/e4.jpg`
+        image: `${import.meta.env.BASE_URL}/image/companies/e5.jpg`
       },
       { 
         id: 14, 
@@ -468,11 +499,11 @@ const CompanySelector = ({ onCompanySelect, onBranchSelect }) => {
     }));
     setCompanies(companiesArray);
     
-    // Seleccionar TechCorp Solutions por defecto
-    setSelectedCompany('TechCorp Solutions');
+    // Seleccionar Zeiss Technology por defecto
+    setSelectedCompany('Zeiss Technology');
     
-    if (companiesData['TechCorp Solutions'] && companiesData['TechCorp Solutions'].branches.length > 0) {
-      const company = companiesData['TechCorp Solutions'];
+    if (companiesData['Zeiss Technology'] && companiesData['Zeiss Technology'].branches.length > 0) {
+      const company = companiesData['Zeiss Technology'];
       const avgLat = company.branches.reduce((sum, branch) => sum + branch.position[0], 0) / company.branches.length;
       const avgLng = company.branches.reduce((sum, branch) => sum + branch.position[1], 0) / company.branches.length;
       setMapCenter([avgLat, avgLng]);
@@ -511,7 +542,7 @@ const CompanySelector = ({ onCompanySelect, onBranchSelect }) => {
       city: city.name,
       employees: Math.floor(Math.random() * 300) + 50,
       address: `Dirección ejemplo ${index + 1}, ${city.name}`,
-      image: `${import.meta.env.BASE_URL}/image/companies/e1.png`
+      image: `${import.meta.env.BASE_URL}/image/companies/e${(index % 7) + 1}.jpg`
     }));
   };
 

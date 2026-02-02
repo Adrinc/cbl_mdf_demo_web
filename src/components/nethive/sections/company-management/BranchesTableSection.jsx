@@ -29,6 +29,35 @@ const BranchesTableSection = ({ branches, companyName, onAddBranch, onEditBranch
         ),
         size: 80,
       }),
+      columnHelper.accessor('image', {
+        header: ingles ? 'Image' : 'Imagen',
+        cell: info => {
+          const imageUrl = info.getValue();
+          return (
+            <div className={styles.imageCell}>
+              {imageUrl ? (
+                <img 
+                  src={imageUrl} 
+                  alt={info.row.original.name}
+                  className={styles.branchImage}
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    e.target.nextElementSibling.style.display = 'flex';
+                  }}
+                />
+              ) : null}
+              <span 
+                className={styles.imagePlaceholder} 
+                style={{ display: imageUrl ? 'none' : 'flex' }}
+              >
+                🏢
+              </span>
+            </div>
+          );
+        },
+        size: 80,
+        enableSorting: false,
+      }),
       columnHelper.accessor('name', {
         header: ingles ? 'Branch Name' : 'Nombre de Sucursal',
         cell: info => (
@@ -278,6 +307,25 @@ const BranchesTableSection = ({ branches, companyName, onAddBranch, onEditBranch
             return (
               <div key={row.id} className={styles.mobileCard}>
                 <div className={styles.mobileCardHeader}>
+                  {/* Imagen de la sucursal */}
+                  <div className={styles.mobileCardImage}>
+                    {branch.image ? (
+                      <img 
+                        src={branch.image} 
+                        alt={branch.name}
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          e.target.nextElementSibling.style.display = 'flex';
+                        }}
+                      />
+                    ) : null}
+                    <span 
+                      className={styles.mobileImagePlaceholder} 
+                      style={{ display: branch.image ? 'none' : 'flex' }}
+                    >
+                      🏢
+                    </span>
+                  </div>
                   <div className={styles.mobileCardTitle}>
                     <span className={styles.mobileCardId}>#{branch.id}</span>
                     <h4 className={styles.mobileCardName}>{branch.name}</h4>
