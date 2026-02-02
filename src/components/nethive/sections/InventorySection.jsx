@@ -20,6 +20,41 @@ const InventorySection = ({ inventoryData, onAddEquipment }) => {
   const [globalFilter, setGlobalFilter] = useState('');
   const [columnFilters, setColumnFilters] = useState([]);
 
+  // Mapeo de tipos a colores e iconos
+  const typeConfig = {
+    'Switch': { icon: '🔀', color: '#3b82f6', bgColor: 'rgba(59, 130, 246, 0.2)' },
+    'Patch Panel': { icon: '🔳', color: '#8b5cf6', bgColor: 'rgba(139, 92, 246, 0.2)' },
+    'Router': { icon: '🌐', color: '#10b981', bgColor: 'rgba(16, 185, 129, 0.2)' },
+    'Firewall': { icon: '🛡️', color: '#ef4444', bgColor: 'rgba(239, 68, 68, 0.2)' },
+    'UPS': { icon: '🔋', color: '#f59e0b', bgColor: 'rgba(245, 158, 11, 0.2)' },
+    'Cable Cat6A': { icon: '🔌', color: '#06b6d4', bgColor: 'rgba(6, 182, 212, 0.2)' },
+    'Fibra Optica': { icon: '💡', color: '#ec4899', bgColor: 'rgba(236, 72, 153, 0.2)' },
+    'Server Rack': { icon: '🗄️', color: '#6366f1', bgColor: 'rgba(99, 102, 241, 0.2)' },
+    'PDU': { icon: '⚡', color: '#eab308', bgColor: 'rgba(234, 179, 8, 0.2)' },
+    'Conversor Media': { icon: '🔄', color: '#14b8a6', bgColor: 'rgba(20, 184, 166, 0.2)' },
+    'Access Point': { icon: '📡', color: '#a855f7', bgColor: 'rgba(168, 85, 247, 0.2)' },
+    'KVM Switch': { icon: '🖥️', color: '#64748b', bgColor: 'rgba(100, 116, 139, 0.2)' },
+  };
+
+  // Mapeo de tipos a imágenes
+  const getImageForType = (tipo) => {
+    const imageMap = {
+      'Switch': 'switch_default.png',
+      'Patch Panel': 'patch_default.jpg',
+      'Router': 'switch_default.png',
+      'Firewall': 'switch_default.png',
+      'UPS': 'ups_default.jpg',
+      'Cable Cat6A': 'cable_fibra_optica_default.jpg',
+      'Fibra Optica': 'cable_fibra_optica_default.jpg',
+      'Server Rack': 'rack_default.jpg',
+      'PDU': 'rack_default.jpg',
+      'Conversor Media': 'idf_default.jpg',
+      'Access Point': 'idf_default.jpg',
+      'KVM Switch': 'rack.jpg',
+    };
+    return `${import.meta.env.BASE_URL}/image/inventarioMDF/${imageMap[tipo] || 'rack_default.jpg'}`;
+  };
+
   const columnHelper = createColumnHelper();
 
   const columns = useMemo(
@@ -27,16 +62,49 @@ const InventorySection = ({ inventoryData, onAddEquipment }) => {
       columnHelper.accessor('id', {
         header: 'ID',
         cell: info => info.getValue(),
+        size: 60,
+        enableColumnFilter: false,
+      }),
+      columnHelper.display({
+        id: 'image',
+        header: ingles ? 'Image' : 'Imagen',
+        cell: ({ row }) => (
+          <div className={styles.imageCell}>
+            <img 
+              src={getImageForType(row.original.tipo)} 
+              alt={row.original.tipo}
+              className={styles.equipmentImage}
+              onError={(e) => {
+                e.target.src = `${import.meta.env.BASE_URL}/image/inventarioMDF/rack_default.jpg`;
+              }}
+            />
+          </div>
+        ),
         size: 80,
+        enableSorting: false,
         enableColumnFilter: false,
       }),
       columnHelper.accessor('tipo', {
         header: ingles ? 'Type' : 'Tipo',
-        cell: info => (
-          <span className={styles.typeTag}>{info.getValue()}</span>
-        ),
+        cell: info => {
+          const tipo = info.getValue();
+          const config = typeConfig[tipo] || { icon: '📦', color: '#6b7280', bgColor: 'rgba(107, 114, 128, 0.2)' };
+          return (
+            <span 
+              className={styles.typeTag}
+              style={{ 
+                background: config.bgColor, 
+                color: config.color,
+                border: `1px solid ${config.color}40`
+              }}
+            >
+              <span className={styles.typeIcon}>{config.icon}</span>
+              {tipo}
+            </span>
+          );
+        },
         filterFn: 'includesString',
-        size: 120,
+        size: 150,
       }),
       columnHelper.accessor('modelo', {
         header: ingles ? 'Model' : 'Modelo',
@@ -206,6 +274,7 @@ const InventorySection = ({ inventoryData, onAddEquipment }) => {
       <div className={styles.cardsContainer}>
         {table.getRowModel().rows.map((row) => {
           const item = row.original;
+          const config = typeConfig[item.tipo] || { icon: '📦', color: '#6b7280', bgColor: 'rgba(107, 114, 128, 0.2)' };
           return (
             <div key={item.id} className={styles.inventoryCard}>
               <div className={styles.cardHeader}>
@@ -217,9 +286,30 @@ const InventorySection = ({ inventoryData, onAddEquipment }) => {
                 </div>
               </div>
               
+              <div className={styles.cardImageSection}>
+                <img 
+                  src={getImageForType(item.tipo)} 
+                  alt={item.tipo}
+                  className={styles.cardEquipmentImage}
+                  onError={(e) => {
+                    e.target.src = `${import.meta.env.BASE_URL}/image/inventarioMDF/rack_default.jpg`;
+                  }}
+                />
+              </div>
+              
               <div className={styles.cardContent}>
                 <div className={styles.cardTitle}>
-                  <span className={styles.typeTag}>{item.tipo}</span>
+                  <span 
+                    className={styles.typeTag}
+                    style={{ 
+                      background: config.bgColor, 
+                      color: config.color,
+                      border: `1px solid ${config.color}40`
+                    }}
+                  >
+                    <span className={styles.typeIcon}>{config.icon}</span>
+                    {item.tipo}
+                  </span>
                   <span className={`${styles.statusBadge} ${styles.operativo}`}>
                     {item.estado}
                   </span>

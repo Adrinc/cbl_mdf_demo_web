@@ -241,13 +241,18 @@ const DemoInteractivo = () => {
           {/* Menú móvil desplegable */}
           <div className={`${styles.mobileMenu} ${mobileMenuOpen ? styles.open : ''}`}>
             <nav className={styles.mobileNav}>
+              {/* Botón de regresar a Empresas - separado del resto */}
               <div 
-                className={`${styles.mobileNavItem} ${activeSection === 'company-selector' ? styles.active : ''}`}
+                className={`${styles.mobileNavItem} ${styles.backToCompanies} ${activeSection === 'company-selector' ? styles.active : ''}`}
                 onClick={() => handleNavClick('company-selector')}
               >
-                <span className={styles.mobileNavIcon}>🏢</span>
+                <span className={styles.mobileNavIcon}>⬅</span>
                 <span>{ingles ? 'Companies' : 'Empresas'}</span>
               </div>
+              
+              {/* Separador */}
+              <div className={styles.mobileNavDivider}></div>
+              
               <div 
                 className={`${styles.mobileNavItem} ${activeSection === 'dashboard' ? styles.active : ''}`}
                 onClick={() => handleNavClick('dashboard')}
@@ -318,13 +323,18 @@ const DemoInteractivo = () => {
             {/* Sidebar */}
             <aside className={styles.sidebar}>
               <nav className={styles.navigation}>
+                {/* Botón de regresar a Empresas - separado del resto */}
                 <div 
-                  className={`${styles.navItem} ${activeSection === 'company-selector' ? styles.active : ''}`}
+                  className={`${styles.navItem} ${styles.backToCompanies} ${activeSection === 'company-selector' ? styles.active : ''}`}
                   onClick={() => handleNavClick('company-selector')}
                 >
-                  <span className={styles.navIcon}>🏢</span>
+                  <span className={styles.navIcon}>⬅</span>
                   {ingles ? 'Companies' : 'Empresas'}
                 </div>
+                
+                {/* Separador */}
+                <div className={styles.navDivider}></div>
+                
                 <div 
                   className={`${styles.navItem} ${activeSection === 'dashboard' ? styles.active : ''}`}
                   onClick={() => handleNavClick('dashboard')}

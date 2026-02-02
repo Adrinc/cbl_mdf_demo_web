@@ -112,16 +112,44 @@
   border-right: none;
 }
 
+/* Celda de imagen de inventario */
+.imageCell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.equipmentImage {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.equipmentImage:hover {
+  transform: scale(1.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  z-index: 10;
+}
+
 /* Table Cell Components */
 .typeTag {
-  background: linear-gradient(45deg, #3b82f6 0%, #1e40af 100%);
-  color: white;
-  padding: 0.25rem 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.75rem;
   border-radius: 20px;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+.typeIcon {
+  font-size: 0.9rem;
 }
 
 .statusBadge {
@@ -488,6 +516,23 @@
   border-color: #7ae582;
   transform: scale(1.1);
   box-shadow: 0 4px 8px rgba(122, 229, 130, 0.2);
+}
+
+/* Sección de imagen en tarjetas móviles */
+.cardImageSection {
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem 0;
+}
+
+.cardEquipmentImage {
+  width: 100%;
+  max-width: 200px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 2px solid rgba(122, 229, 130, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 .cardContent {
