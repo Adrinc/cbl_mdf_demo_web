@@ -35,13 +35,13 @@ index.astro → LayoutDemo.astro → DemoInteractivo.jsx (orquestador central)
 
 ### Navegación y Salida
 
-- **Footer global tipo snackbar**: Barra fija en la parte inferior (100vw) presente en todas las pantallas
-- **Estructura del footer**:
-  - Centro: Indicador de demo con icono (🎭 Demo Interactiva)
-  - Derecha: Botón rojo de "Salir" que regresa a https://cbluna.com/
-  - Confirmación antes de salir
-- **Implementación**: `window.location.href = 'https://cbluna.com/'`
-- **Responsive**: En móvil, el footer se adapta con layout vertical y el botón solo muestra el ícono
+- **FAB de salida**: Botón flotante (FAB) en esquina inferior derecha presente en todas las pantallas
+- **Navegación móvil**: Menú hamburguesa con panel lateral deslizante para pantallas < 768px
+- **Estructura del menú móvil**:
+  - Navegación entre secciones (Empresas, Dashboard, Inventario, etc.)
+  - Información de sucursal seleccionada
+  - Botón de salida de demo
+- **Implementación de salida**: `window.location.href = 'https://cbluna.com/'`
 - No usar referencias a marca "NetHive" - usar textos genéricos de "gestión MDF/IDF"
 
 ## Convenciones de Código

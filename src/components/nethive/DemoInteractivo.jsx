@@ -23,6 +23,7 @@ const DemoInteractivo = () => {
   const [activeSection, setActiveSection] = useState('company-selector');
   const [selectedBranchData, setSelectedBranchData] = useState(null);
   const [selectedCompany, setSelectedCompany] = useState(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [inventory, setInventory] = useState([
     { id: 1, tipo: 'Switch', modelo: 'Cisco 2960X-24PS', ubicacion: 'MDF-Rack-01', estado: 'Operativo', puertos: 24, fechaInstalacion: '2024-01-15' },
     { id: 2, tipo: 'Patch Panel', modelo: 'CommScope 1375055-2', ubicacion: 'MDF-Rack-01', estado: 'Operativo', puertos: 48, fechaInstalacion: '2024-01-15' },
@@ -138,6 +139,7 @@ const DemoInteractivo = () => {
 
   const handleNavClick = (section) => {
     setActiveSection(section);
+    setMobileMenuOpen(false); // Cerrar menú móvil al navegar
   };
 
   const handleAddEquipment = (newEquipment) => {
@@ -210,6 +212,16 @@ const DemoInteractivo = () => {
           {/* Header */}
           <header className={styles.header}>
             <div className={styles.headerLeft}>
+              {/* Botón hamburguesa para móvil */}
+              <button 
+                className={styles.mobileMenuBtn}
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                aria-label={mobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
+              >
+                <span className={`${styles.hamburgerLine} ${mobileMenuOpen ? styles.open : ''}`}></span>
+                <span className={`${styles.hamburgerLine} ${mobileMenuOpen ? styles.open : ''}`}></span>
+                <span className={`${styles.hamburgerLine} ${mobileMenuOpen ? styles.open : ''}`}></span>
+              </button>
               <img src={`${import.meta.env.BASE_URL}/image/isotipodemo/nethive.png`} alt="Logo" className={styles.logo} />
               <h1 className={styles.title}>{textos.title}</h1>
               {selectedBranchData && (
@@ -225,6 +237,82 @@ const DemoInteractivo = () => {
               </div>
             </div>
           </header>
+
+          {/* Menú móvil desplegable */}
+          <div className={`${styles.mobileMenu} ${mobileMenuOpen ? styles.open : ''}`}>
+            <nav className={styles.mobileNav}>
+              <div 
+                className={`${styles.mobileNavItem} ${activeSection === 'company-selector' ? styles.active : ''}`}
+                onClick={() => handleNavClick('company-selector')}
+              >
+                <span className={styles.mobileNavIcon}>🏢</span>
+                <span>{ingles ? 'Companies' : 'Empresas'}</span>
+              </div>
+              <div 
+                className={`${styles.mobileNavItem} ${activeSection === 'dashboard' ? styles.active : ''}`}
+                onClick={() => handleNavClick('dashboard')}
+              >
+                <span className={styles.mobileNavIcon}>📊</span>
+                <span>{textos.navigation.dashboard}</span>
+              </div>
+              <div 
+                className={`${styles.mobileNavItem} ${activeSection === 'inventory' ? styles.active : ''}`}
+                onClick={() => handleNavClick('inventory')}
+              >
+                <span className={styles.mobileNavIcon}>📦</span>
+                <span>{textos.navigation.inventory}</span>
+              </div>
+              <div 
+                className={`${styles.mobileNavItem} ${activeSection === 'topology' ? styles.active : ''}`}
+                onClick={() => handleNavClick('topology')}
+              >
+                <span className={styles.mobileNavIcon}>🌐</span>
+                <span>{textos.navigation.topology}</span>
+              </div>
+              <div 
+                className={`${styles.mobileNavItem} ${activeSection === 'alerts' ? styles.active : ''}`}
+                onClick={() => handleNavClick('alerts')}
+              >
+                <span className={styles.mobileNavIcon}>🚨</span>
+                <span>{textos.navigation.alerts}</span>
+              </div>
+              <div 
+                className={`${styles.mobileNavItem} ${activeSection === 'settings' ? styles.active : ''}`}
+                onClick={() => handleNavClick('settings')}
+              >
+                <span className={styles.mobileNavIcon}>⚙️</span>
+                <span>{textos.navigation.settings}</span>
+              </div>
+              
+              {/* Separador */}
+              <div className={styles.mobileNavDivider}></div>
+              
+              {/* Acciones adicionales */}
+              <div 
+                className={`${styles.mobileNavItem} ${styles.exitItem}`}
+                onClick={handleExitDemo}
+              >
+                <span className={styles.mobileNavIcon}>🚪</span>
+                <span>{ingles ? 'Exit Demo' : 'Salir de Demo'}</span>
+              </div>
+            </nav>
+            
+            {/* Info de sucursal en móvil */}
+            {selectedBranchData && (
+              <div className={styles.mobileBranchInfo}>
+                <span className={styles.mobileBranchName}>{selectedBranchData.branchInfo.name}</span>
+                <span className={styles.mobileCompanyName}>{selectedBranchData.branchInfo.company}</span>
+              </div>
+            )}
+          </div>
+          
+          {/* Overlay para cerrar menú */}
+          {mobileMenuOpen && (
+            <div 
+              className={styles.mobileMenuOverlay} 
+              onClick={() => setMobileMenuOpen(false)}
+            />
+          )}
 
           <div className={styles.mainContent}>
             {/* Sidebar */}
