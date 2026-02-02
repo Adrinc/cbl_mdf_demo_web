@@ -136,7 +136,7 @@ npm run preview
 ### Configuración de Deployment
 
 - **Site**: https://Adrinc.github.io
-- **Base path**: `/cbl_nethive_demo`
+- **Base path**: `/cbl_mdf_demo_web`
 - **Output**: Estático (SSG)
 - Configurar en `astro.config.mjs`
 

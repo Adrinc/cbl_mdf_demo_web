@@ -4,7 +4,7 @@ import tailwind from '@astrojs/tailwind';
 
 export default defineConfig({
   site: 'https://Adrinc.github.io',
-  base: '/cbl_nethive_demo',
+  base: '/cbl_mdf_demo_web',
   integrations: [react(), tailwind()],
   output: 'static',
 });
