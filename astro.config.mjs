@@ -7,7 +7,7 @@ const isVercel = process.env.VERCEL === '1';
 const baseUrl = isVercel ? '/' : '/cbl_mdf_demo_web';
 
 export default defineConfig({
-  site: isVercel ? 'https://cbl-mdf-demo-web-iddm.vercel.app' : 'https://Adrinc.github.io',
+  site: isVercel ? 'https://cbl-mdf-demo-web.vercel.app' : 'https://Adrinc.github.io',
   base: baseUrl,
   integrations: [react(), tailwind()],
   output: 'static',

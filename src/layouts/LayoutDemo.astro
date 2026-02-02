@@ -7,6 +7,7 @@ interface Props {
 }
 
 const { title } = Astro.props;
+const baseUrl = import.meta.env.BASE_URL;
 ---
 
 <!doctype html>
@@ -30,41 +31,41 @@ const { title } = Astro.props;
 	</body>
 </html>
 
-<style is:global>
+<style is:global define:vars={{ baseUrl }}>
 	@font-face {
 		font-family: 'Inter';
 		src: 
-			url('/cbl_mdf_demo_web/fonts/Inter.ttf') format('ttf'),
-			url('/cbl_mdf_demo_web/fonts/InterVariable.ttf') format('ttf'),
-			url('/cbl_mdf_demo_web/fonts/InterVariable.woff2') format('woff2');
+			url('var(--baseUrl)/fonts/Inter.ttf') format('ttf'),
+			url('var(--baseUrl)/fonts/InterVariable.ttf') format('ttf'),
+			url('var(--baseUrl)/fonts/InterVariable.woff2') format('woff2');
 		font-display: swap;
 	}
 	
 	@font-face {
 		font-family: 'OpenSans';
 		src: 
-			url('/cbl_mdf_demo_web/fonts/OpenSans.ttf') format('ttf'),
-			url('/cbl_mdf_demo_web/fonts/OpenSansRegular.ttf') format('ttf'),
-			url('/cbl_mdf_demo_web/fonts/OpenSansRegular.woff') format('woff'),
-			url('/cbl_mdf_demo_web/fonts/OpenSansRegular.woff2') format('woff2');
+			url('var(--baseUrl)/fonts/OpenSans.ttf') format('ttf'),
+			url('var(--baseUrl)/fonts/OpenSansRegular.ttf') format('ttf'),
+			url('var(--baseUrl)/fonts/OpenSansRegular.woff') format('woff'),
+			url('var(--baseUrl)/fonts/OpenSansRegular.woff2') format('woff2');
 		font-display: swap;
 	}
 	
 	@font-face {
 		font-family: 'Catamaran';
 		src: 
-			url('/cbl_mdf_demo_web/fonts/Catamaran.ttf') format('ttf'),
-			url('/cbl_mdf_demo_web/fonts/CatamaranRegular.woff') format('woff'),
-			url('/cbl_mdf_demo_web/fonts/CatamaranRegular.woff2') format('woff2');
+			url('var(--baseUrl)/fonts/Catamaran.ttf') format('ttf'),
+			url('var(--baseUrl)/fonts/CatamaranRegular.woff') format('woff'),
+			url('var(--baseUrl)/fonts/CatamaranRegular.woff2') format('woff2');
 		font-display: swap;
 	}
 	
 	@font-face {
 		font-family: 'OldPress';
 		src: 
-			url('/cbl_mdf_demo_web/fonts/OldPress.ttf') format('ttf'),
-			url('/cbl_mdf_demo_web/fonts/OldPress.woff') format('woff'),
-			url('/cbl_mdf_demo_web/fonts/OldPress.woff2') format('woff2');
+			url('var(--baseUrl)/fonts/OldPress.ttf') format('ttf'),
+			url('var(--baseUrl)/fonts/OldPress.woff') format('woff'),
+			url('var(--baseUrl)/fonts/OldPress.woff2') format('woff2');
 		font-display: swap;
 	}
 	
