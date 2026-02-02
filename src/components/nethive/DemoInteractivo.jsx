@@ -33,7 +33,7 @@ const DemoInteractivo = () => {
     { id: 6, tipo: 'Patch Panel', modelo: 'Panduit DP485E88TGY', ubicacion: 'IDF-02-Rack-01', estado: 'Operativo', puertos: 48, fechaInstalacion: '2024-02-12' },
     { id: 7, tipo: 'Cable Cat6A', modelo: 'Belden 2413', ubicacion: 'MDF-IDF-01', estado: 'Operativo', longitud: '150m', fechaInstalacion: '2024-01-20' },
     { id: 8, tipo: 'UPS', modelo: 'APC Smart-UPS 3000VA', ubicacion: 'IDF-02-Rack-01', estado: 'Operativo', capacidad: '3000VA', fechaInstalacion: '2024-03-05' },
-    { id: 9, tipo: 'Fibra Optica', modelo: 'Corning SMF-28', ubicacion: 'MDF-IDF-02', estado: 'Operativo', tipo: 'Monomodo', fechaInstalacion: '2024-02-25' },
+    { id: 9, tipo: 'Fibra Optica', modelo: 'Corning SMF-28', ubicacion: 'MDF-IDF-02', estado: 'Operativo', categoria: 'Monomodo', fechaInstalacion: '2024-02-25' },
     { id: 10, tipo: 'Router', modelo: 'Cisco ISR 4321', ubicacion: 'MDF-Rack-01', estado: 'Operativo', puertos: 4, fechaInstalacion: '2024-01-10' },
     { id: 11, tipo: 'Firewall', modelo: 'Fortinet FortiGate 100F', ubicacion: 'MDF-Rack-01', estado: 'Operativo', puertos: 14, fechaInstalacion: '2024-01-12' },
     { id: 12, tipo: 'Switch', modelo: 'Cisco 2960X-24PS', ubicacion: 'IDF-03-Rack-01', estado: 'Operativo', puertos: 24, fechaInstalacion: '2024-03-15' },
