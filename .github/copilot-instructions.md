@@ -20,7 +20,7 @@ index.astro → LayoutDemo.astro → DemoInteractivo.jsx (orquestador central)
                 CompanySelector → Dashboard/Inventory/Topology/Alerts/Settings
 ```
 
-- **[DemoInteractivo.jsx](src/components/nethive/DemoInteractivo.jsx)** es el componente raíz que maneja:
+- **DemoInteractivo.jsx** es el componente raíz que maneja:
   - Estado de autenticación (`isLoggedIn`)
   - Navegación entre secciones (`activeSection`)
   - Datos compartidos (inventory, alerts, topologyConnections)
@@ -138,7 +138,7 @@ npm run preview
 - **Site**: https://Adrinc.github.io
 - **Base path**: `/cbl_nethive_demo`
 - **Output**: Estático (SSG)
-- Configurar en [astro.config.mjs](astro.config.mjs)
+- Configurar en `astro.config.mjs`
 
 ### Manejo de Assets
 
@@ -196,11 +196,11 @@ El proyecto usa **@tanstack/react-table v8** para tablas con:
 - Sorting
 - Paginación
 
-Ver [InventorySection.jsx](src/components/nethive/sections/InventorySection.jsx) como referencia completa.
+Ver `InventorySection.jsx` como referencia completa.
 
 ### Datos Mock
 
-Los datos de inventario, alertas y topología están hardcoded en [DemoInteractivo.jsx](src/components/nethive/DemoInteractivo.jsx) (líneas 28-68). Este es el lugar correcto para agregar/modificar datos de prueba.
+Los datos de inventario, alertas y topología están hardcoded en `DemoInteractivo.jsx` (líneas 28-68). Este es el lugar correcto para agregar/modificar datos de prueba.
 
 ## Dependencias Clave
 
@@ -224,8 +224,8 @@ Los datos de inventario, alertas y topología están hardcoded en [DemoInteracti
 
 ## Referencias de Componentes Clave
 
-- **Orquestador**: [DemoInteractivo.jsx](src/components/nethive/DemoInteractivo.jsx)
-- **Tablas avanzadas**: [InventorySection.jsx](src/components/nethive/sections/InventorySection.jsx)
-- **Mapas interactivos**: [CompanySelector.jsx](src/components/nethive/sections/company-management/CompanySelector.jsx)
-- **Diagramas de red**: [TopologySection.jsx](src/components/nethive/sections/TopologySection.jsx)
-- **Dashboard con gráficos**: [DashboardStats.jsx](src/components/nethive/sections/dashboard/DashboardStats.jsx)
+- **Orquestador**: `DemoInteractivo.jsx`
+- **Tablas avanzadas**: `InventorySection.jsx`
+- **Mapas interactivos**: `CompanySelector.jsx`
+- **Diagramas de red**: `TopologySection.jsx`
+- **Dashboard con gráficos**: `DashboardStats.jsx`

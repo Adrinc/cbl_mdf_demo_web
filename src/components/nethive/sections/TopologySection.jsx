@@ -102,6 +102,25 @@ const nodeTypes = {
 const TopologySection = ({ topologyConnections }) => {
   const ingles = useStore(isEnglish);
   const [viewMode, setViewMode] = useState('visual');
+  const [backgroundImage, setBackgroundImage] = useState(`${import.meta.env.BASE_URL}/image/plano/plano.jpg`);
+  const fileInputRef = React.useRef(null);
+
+  // Handler para cargar imagen personalizada
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setBackgroundImage(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Resetear a imagen por defecto
+  const handleResetBackground = () => {
+    setBackgroundImage(`${import.meta.env.BASE_URL}/image/plano/plano.jpg`);
+  };
 
   // Definir nodos para React Flow
   const initialNodes = [
@@ -307,7 +326,15 @@ const TopologySection = ({ topologyConnections }) => {
   );
 
   const renderVisualTopology = () => (
-    <div className={flowStyles.flowContainer}>
+    <div 
+      className={flowStyles.flowContainer}
+      style={{ 
+        backgroundImage: `url(${backgroundImage})`,
+      }}
+    >
+      {/* Overlay para oscurecer la imagen */}
+      <div className={flowStyles.backgroundOverlay}></div>
+      
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -340,10 +367,32 @@ const TopologySection = ({ topologyConnections }) => {
           size={1}
           color="#374151"
         />
-        
-        {/* Imagen de fondo personalizada */}
-        <div className={flowStyles.backgroundImage}></div>
       </ReactFlow>
+      
+      {/* Controles de fondo */}
+      <div className={flowStyles.backgroundControls}>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleImageUpload}
+          style={{ display: 'none' }}
+        />
+        <button 
+          className={flowStyles.bgButton}
+          onClick={() => fileInputRef.current?.click()}
+          title={ingles ? 'Upload floor plan' : 'Cargar plano'}
+        >
+          📁 {ingles ? 'Upload Plan' : 'Cargar Plano'}
+        </button>
+        <button 
+          className={flowStyles.bgButton}
+          onClick={handleResetBackground}
+          title={ingles ? 'Reset to default' : 'Restaurar por defecto'}
+        >
+          🔄 {ingles ? 'Reset' : 'Restaurar'}
+        </button>
+      </div>
       
       {/* Leyenda */}
       <div className={flowStyles.legend}>

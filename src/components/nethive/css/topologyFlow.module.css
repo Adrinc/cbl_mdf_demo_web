@@ -1,34 +1,72 @@
 /* React Flow Container */
 .flowContainer {
-  height: 900px; /* Aumentado de 700px a 800px */
+  height: 900px;
   width: 100%;
-  background: rgba(26, 32, 44, 0.5);
   border-radius: 12px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.1);
   position: relative;
-  /* Imagen de fondo */
-  background-image: url('/image/global/plano.jpg');
-  background-size: 100% 100%; /* Estira la imagen para llenar completamente el contenedor */
+  /* Imagen de fondo dinámica via inline style */
+  background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
-  background-blend-mode: overlay;
 }
 
-/* Imagen de fondo personalizada adicional */
-.backgroundImage {
+/* Overlay oscuro sobre la imagen de fondo */
+.backgroundOverlay {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: url('/image/global/plano.jpg');
-  background-size: 100% 100%; /* Estira la imagen para llenar completamente el contenedor */
-  background-position: center;
-  background-repeat: no-repeat;
-  opacity: 0.2; /* Aumentado ligeramente la opacidad para mejor visibilidad */
+  background: rgba(26, 32, 44, 0.7);
   pointer-events: none;
   z-index: 0;
+}
+
+/* Controles de imagen de fondo */
+.backgroundControls {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  z-index: 10;
+}
+
+.bgButton {
+  background: linear-gradient(135deg, #7ae582 0%, #2563eb 100%);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  padding: 0.65rem 1.25rem;
+  color: #1a202c;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(122, 229, 130, 0.4);
+  text-shadow: none;
+}
+
+.bgButton:hover {
+  background: linear-gradient(135deg, #a7f3d0 0%, #60a5fa 100%);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(122, 229, 130, 0.5);
+}
+
+.bgButton:active {
+  transform: translateY(-1px) scale(1.02);
+}
+
+/* Botón de restaurar con estilo diferente */
+.bgButton:last-child {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+}
+
+.bgButton:last-child:hover {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  box-shadow: 0 8px 25px rgba(245, 158, 11, 0.5);
 }
 
 /* Asegurar que React Flow esté por encima del fondo */
