@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { useStore } from '@nanostores/react';
 import { isEnglish } from '../../../../data/variables';
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import BranchesTableSection from './BranchesTableSection';
@@ -142,7 +142,7 @@ const companiesData = {
   "TechCorp Solutions": {
     id: "techcorp",
     industry: "Tecnología",
-    logo: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Crect width='60' height='60' fill='%2300bcd4'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-size='28' font-weight='bold' fill='white'%3ETC%3C/text%3E%3C/svg%3E",
+    logo: `${import.meta.env.BASE_URL}/image/logos/logo-zeiss.png`,
     branches: [
       { 
         id: 1, 
@@ -185,7 +185,7 @@ const companiesData = {
   "Global Manufacturing Inc": {
     id: "globalmanuf",
     industry: "Manufactura",
-    logo: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Crect width='60' height='60' fill='%23ff7043'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-size='26' font-weight='bold' fill='white'%3EGM%3C/text%3E%3C/svg%3E",
+    logo: `${import.meta.env.BASE_URL}/image/logos/logo-bimbo.png`,
     branches: [
       { 
         id: 5, 
@@ -228,7 +228,7 @@ const companiesData = {
   "FinanceHub Networks": {
     id: "financehub",
     industry: "Servicios Financieros",
-    logo: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Crect width='60' height='60' fill='%2342a5f5'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-size='28' font-weight='bold' fill='white'%3EFH%3C/text%3E%3C/svg%3E",
+    logo: `${import.meta.env.BASE_URL}/image/logos/logo-wwf.png`,
     branches: [
       { 
         id: 9, 
@@ -271,7 +271,7 @@ const companiesData = {
   "RetailChain Express": {
     id: "retailchain",
     industry: "Retail",
-    logo: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Crect width='60' height='60' fill='%23ab47bc'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-size='28' font-weight='bold' fill='white'%3ERC%3C/text%3E%3C/svg%3E",
+    logo: `${import.meta.env.BASE_URL}/image/logos/logo-lorem.jpg`,
     branches: [
       { 
         id: 13, 
@@ -313,13 +313,39 @@ const companiesData = {
   }
 };
 
+// Componente para sincronizar la vista del mapa cuando cambia la empresa
+const MapViewController = ({ branches }) => {
+  const map = useMap();
+  
+  useEffect(() => {
+    if (map && branches && branches.length > 0) {
+      const bounds = L.latLngBounds(branches.map(branch => branch.position));
+      
+      // Pequeño timeout para asegurar que el mapa está completamente renderizado
+      setTimeout(() => {
+        map.fitBounds(bounds, { 
+          padding: [50, 50],
+          maxZoom: 12
+        });
+      }, 50);
+    }
+  }, [branches, map]);
+  
+  return null;
+};
+
 // Componente wrapper para el mapa que solo se renderiza en el cliente
-const ClientOnlyMap = ({ mapCenter, mapZoom, selectedCompany, handleMarkerHover, handleMarkerLeave, handleBranchSelect, mapRef }) => {
+const ClientOnlyMap = ({ mapCenter, mapZoom, selectedCompany, handleMarkerHover, handleMarkerLeave, handleBranchSelect, mapRef, onCenterMap, centerButtonLabel }) => {
   const [isMounted, setIsMounted] = useState(false);
   
   useEffect(() => {
     setIsMounted(true);
   }, []);
+  
+  // Obtener las sucursales de la empresa seleccionada
+  const branches = selectedCompany && companiesData[selectedCompany] 
+    ? companiesData[selectedCompany].branches 
+    : [];
   
   if (!isMounted || !isBrowser) {
     return (
@@ -334,13 +360,28 @@ const ClientOnlyMap = ({ mapCenter, mapZoom, selectedCompany, handleMarkerHover,
   
   return (
     <div className={styles.mapContainer}>
+      {/* Botón de centrar mapa */}
+      {selectedCompany && (
+        <button 
+          className={styles.centerMapButton}
+          onClick={onCenterMap}
+          title={centerButtonLabel}
+          aria-label={centerButtonLabel}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+          </svg>
+        </button>
+      )}
+      
       <MapContainer
         center={mapCenter}
         zoom={mapZoom}
         className={styles.map}
-        key={`${mapCenter[0]}-${mapCenter[1]}-${mapZoom}`}
         ref={mapRef}
       >
+        {/* Controlador de vista que ajusta los bounds cuando cambia la empresa */}
+        <MapViewController branches={branches} />
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -377,6 +418,7 @@ const CompanySelector = ({ onCompanySelect, onBranchSelect }) => {
   const [editingCompany, setEditingCompany] = useState(null);
   const [editingBranch, setEditingBranch] = useState(null);
   const [sidebarExpanded, setSidebarExpanded] = useState(false); // Estado para sidebar móvil
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false); // Estado para menú hamburguesa
   const mapRef = useRef(null);
 
   // Detectar si es móvil
@@ -396,6 +438,20 @@ const CompanySelector = ({ onCompanySelect, onBranchSelect }) => {
     handleCompanySelect(companyName);
     if (isMobile) {
       setSidebarExpanded(false);
+      setMobileMenuOpen(false);
+    }
+  };
+
+  // Handler para cambiar vista desde el menú móvil
+  const handleViewModeChange = (mode) => {
+    setViewMode(mode);
+    setMobileMenuOpen(false);
+  };
+
+  // Handler para salir de la demo
+  const handleExitDemo = () => {
+    if (confirm(ingles ? 'Exit demo and return to portal?' : '¿Salir de la demo y volver al portal?')) {
+      window.location.href = 'https://cbluna.com/';
     }
   };
 
@@ -598,18 +654,34 @@ const CompanySelector = ({ onCompanySelect, onBranchSelect }) => {
     }
   };
 
+  // Función para ajustar el mapa para mostrar todos los marcadores
+  const fitMapToBranches = (branches) => {
+    if (!mapRef.current || !branches || branches.length === 0) return;
+    
+    const map = mapRef.current;
+    const bounds = L.latLngBounds(branches.map(branch => branch.position));
+    
+    // Añadir un poco de padding para que los marcadores no queden en el borde
+    map.fitBounds(bounds, { 
+      padding: [50, 50],
+      maxZoom: 12 // Limitar el zoom máximo para no acercarse demasiado si hay pocas sucursales
+    });
+  };
+
+  // Handler para el botón de centrar mapa
+  const handleCenterMap = () => {
+    if (selectedCompany && companiesData[selectedCompany]) {
+      fitMapToBranches(companiesData[selectedCompany].branches);
+    }
+  };
+
   const handleCompanySelect = (companyName) => {
     const company = companiesData[companyName];
     setSelectedCompany(companyName);
     setSelectedBranch(null);
     
-    if (company.branches.length > 0) {
-      // Calcular el centro del mapa basado en las sucursales
-      const avgLat = company.branches.reduce((sum, branch) => sum + branch.position[0], 0) / company.branches.length;
-      const avgLng = company.branches.reduce((sum, branch) => sum + branch.position[1], 0) / company.branches.length;
-      setMapCenter([avgLat, avgLng]);
-      setMapZoom(7);
-    }
+    // El MapViewController se encargará de ajustar la vista automáticamente
+    // cuando detecte el cambio en las sucursales
     
     onCompanySelect && onCompanySelect(company);
   };
@@ -747,7 +819,11 @@ const CompanySelector = ({ onCompanySelect, onBranchSelect }) => {
       branchesOf: "Sucursales de",
       selectCompanyFirst: "Selecciona una empresa primero",
       noCompanySelectedTitle: "No hay empresa seleccionada",
-      noCompanySelectedDesc: "Por favor, selecciona una empresa de la lista para ver sus sucursales."
+      noCompanySelectedDesc: "Por favor, selecciona una empresa de la lista para ver sus sucursales.",
+      exitDemo: "Salir de Demo",
+      companies: "Empresas",
+      navigation: "Navegación",
+      centerMap: "Centrar mapa para ver todas las sucursales"
     },
     en: {
       title: "Select Company",
@@ -767,7 +843,11 @@ const CompanySelector = ({ onCompanySelect, onBranchSelect }) => {
       branchesOf: "Branches of",
       selectCompanyFirst: "Please select a company first",
       noCompanySelectedTitle: "No company selected",
-      noCompanySelectedDesc: "Please select a company from the list to view its branches."
+      noCompanySelectedDesc: "Please select a company from the list to view its branches.",
+      exitDemo: "Exit Demo",
+      companies: "Companies",
+      navigation: "Navigation",
+      centerMap: "Center map to view all branches"
     }
   };
 
@@ -775,6 +855,126 @@ const CompanySelector = ({ onCompanySelect, onBranchSelect }) => {
 
   return (
     <div className={styles.container}>
+      {/* Navbar móvil con menú hamburguesa */}
+      <div className={styles.mobileNavbar}>
+        <button 
+          className={styles.mobileMenuBtn}
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-label={mobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
+        >
+          <span className={`${styles.hamburgerLine} ${mobileMenuOpen ? styles.open : ''}`}></span>
+          <span className={`${styles.hamburgerLine} ${mobileMenuOpen ? styles.open : ''}`}></span>
+          <span className={`${styles.hamburgerLine} ${mobileMenuOpen ? styles.open : ''}`}></span>
+        </button>
+        
+        <div className={styles.mobileNavbarTitle}>
+          <img 
+            src={`${import.meta.env.BASE_URL}/image/isotipodemo/nethive.png`} 
+            alt="Logo" 
+            className={styles.mobileNavbarLogo}
+          />
+          <span>{currentTextos.title}</span>
+        </div>
+        
+        <div className={styles.mobileNavbarRight}>
+          {selectedCompany && companiesData[selectedCompany] && (
+            <img 
+              src={companiesData[selectedCompany].logo}
+              alt={selectedCompany}
+              className={styles.mobileCompanyLogo}
+              onError={(e) => {
+                e.target.style.display = 'none';
+              }}
+            />
+          )}
+        </div>
+      </div>
+
+      {/* Menú móvil desplegable */}
+      <div className={`${styles.mobileMenu} ${mobileMenuOpen ? styles.open : ''}`}>
+        <div className={styles.mobileMenuHeader}>
+          <h3>{currentTextos.navigation}</h3>
+        </div>
+        
+        {/* Selector de vista */}
+        <div className={styles.mobileMenuSection}>
+          <span className={styles.mobileMenuSectionTitle}>
+            {ingles ? 'View Mode' : 'Modo de Vista'}
+          </span>
+          <div 
+            className={`${styles.mobileMenuItem} ${viewMode === 'map' ? styles.active : ''}`}
+            onClick={() => handleViewModeChange('map')}
+          >
+            <span className={styles.mobileMenuIcon}>🗺️</span>
+            <span>{currentTextos.mapView}</span>
+          </div>
+          <div 
+            className={`${styles.mobileMenuItem} ${viewMode === 'table' ? styles.active : ''}`}
+            onClick={() => handleViewModeChange('table')}
+          >
+            <span className={styles.mobileMenuIcon}>📊</span>
+            <span>{currentTextos.tableView}</span>
+          </div>
+        </div>
+        
+        {/* Lista de empresas */}
+        <div className={styles.mobileMenuSection}>
+          <span className={styles.mobileMenuSectionTitle}>
+            {currentTextos.companies}
+          </span>
+          {companies.map((company) => (
+            <div 
+              key={company.id}
+              className={`${styles.mobileMenuItem} ${styles.companyItem} ${selectedCompany === company.name ? styles.active : ''}`}
+              onClick={() => handleCompanySelectMobile(company.name)}
+            >
+              <div className={styles.mobileCompanyItemLogo}>
+                <img 
+                  src={company.logo}
+                  alt={company.name}
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    e.target.nextElementSibling.style.display = 'flex';
+                  }}
+                />
+                <span className={styles.mobileCompanyFallback} style={{ display: 'none' }}>
+                  {company.industry === 'Tecnología' && '💻'}
+                  {company.industry === 'Manufactura' && '🏭'}
+                  {company.industry === 'Servicios Financieros' && '💰'}
+                  {company.industry === 'Retail' && '🛍️'}
+                </span>
+              </div>
+              <div className={styles.mobileCompanyItemInfo}>
+                <span className={styles.mobileCompanyItemName}>{company.name}</span>
+                <span className={styles.mobileCompanyItemMeta}>
+                  {company.industry} • {company.branches.length} {currentTextos.branchesLabel}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+        
+        {/* Divider */}
+        <div className={styles.mobileMenuDivider}></div>
+        
+        {/* Salir */}
+        <div 
+          className={`${styles.mobileMenuItem} ${styles.exitItem}`}
+          onClick={handleExitDemo}
+        >
+          <span className={styles.mobileMenuIcon}>🚪</span>
+          <span>{currentTextos.exitDemo}</span>
+        </div>
+      </div>
+      
+      {/* Overlay para cerrar menú */}
+      {mobileMenuOpen && (
+        <div 
+          className={styles.mobileMenuOverlay} 
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+
       {/* Panel lateral izquierdo - Colapsable en móvil */}
       <div className={`${styles.sidebar} ${sidebarExpanded ? styles.expanded : ''}`}>
         <div 
@@ -932,6 +1132,8 @@ const CompanySelector = ({ onCompanySelect, onBranchSelect }) => {
             handleMarkerLeave={handleMarkerLeave}
             handleBranchSelect={handleBranchSelect}
             mapRef={mapRef}
+            onCenterMap={handleCenterMap}
+            centerButtonLabel={currentTextos.centerMap}
           />
         )}
         

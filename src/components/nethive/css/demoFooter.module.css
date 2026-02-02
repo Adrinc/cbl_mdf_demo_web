@@ -68,22 +68,8 @@
 
 /* Responsive para móvil */
 @media (max-width: 768px) {
+  /* Ocultar FAB en móvil - ya hay opción de salir en el navbar hamburguesa */
   .fabButton {
-    bottom: 1.25rem;
-    right: 1.25rem;
-    min-width: 48px;
-    min-height: 48px;
-    padding: 0.875rem;
-  }
-
-  .fabIcon {
-    width: 20px;
-    height: 20px;
-  }
-
-  /* En móvil no expandir texto */
-  .fabExpanded .fabText {
-    max-width: 0;
-    opacity: 0;
+    display: none;
   }
 }
